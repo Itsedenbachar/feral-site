@@ -170,37 +170,25 @@ export default function FullscreenPortfolio() {
 
   return (
     <section className="fp">
-      <div className="fp__bg">
-        {PROJECTS.map((p, i) => (
-          <div
-            key={i}
-            className={`fp__bg-layer${i === activeIndex ? ' active' : ''}`}
-            style={{ backgroundImage: `url(${p.thumb})` }}
-          />
-        ))}
-      </div>
-      <div className="fp__vignette" />
+      <div className="fp__panel" style={{ backgroundImage: `url(${PROJECTS[activeIndex].thumb})` }} />
 
-      <nav className="fp__sidebar">
+      <header className="fp__header">
         <div className="fp__brand">FERAL</div>
-        <ul className="fp__list">
-          {PROJECTS.map((p, i) => (
-            <li key={i} className={`fp__item${i === activeIndex ? ' active' : ''}`}>
-              <button
-                onMouseEnter={() => setActiveIndex(i)}
-                onClick={() => setLightboxProject(p)}
-              >
-                {p.title}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+        <div className="fp__eyebrow">Selected Work</div>
+      </header>
 
-      <div className="fp__label">
-        <div className="fp__label-eyebrow">Selected Work</div>
-        <div className="fp__label-title">{PROJECTS[activeIndex].title}</div>
-      </div>
+      <ul className="fp__list">
+        {PROJECTS.map((p, i) => (
+          <li key={i} className={`fp__item${i === activeIndex ? ' active' : ''}`}>
+            <button
+              onMouseEnter={() => setActiveIndex(i)}
+              onClick={() => setLightboxProject(p)}
+            >
+              {p.title}
+            </button>
+          </li>
+        ))}
+      </ul>
 
       {lightboxProject && (
         <Lightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
@@ -208,67 +196,57 @@ export default function FullscreenPortfolio() {
 
       <style>{`
         .fp {
-          position: relative; height: 100vh;
-          overflow: hidden; background: #000;
+          position: relative; min-height: 100vh;
+          background: #000; overflow: hidden;
         }
-        .fp__bg { position: absolute; inset: 0; }
-        .fp__bg-layer {
-          position: absolute; inset: 0;
+        .fp__panel {
+          position: fixed; right: 6vw; top: 50%;
+          transform: translateY(-50%);
+          width: min(38vw, 560px); aspect-ratio: 16/10;
           background-size: cover; background-position: center;
-          opacity: 0; transition: opacity 0.7s ease;
+          pointer-events: none; z-index: 1;
+          transition: background-image 0s, opacity 0.4s ease;
+          border-radius: 4px;
         }
-        .fp__bg-layer.active { opacity: 1; }
-        .fp__vignette {
-          position: absolute; inset: 0; z-index: 1; pointer-events: none;
-          background:
-            linear-gradient(to right, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0.1) 100%),
-            linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 30%, transparent 70%, rgba(0,0,0,0.4) 100%);
-        }
-        .fp__sidebar {
-          position: absolute; left: 0; top: 0; bottom: 0;
-          width: 320px; z-index: 10;
-          display: flex; flex-direction: column;
-          padding: 48px 40px;
+        .fp__header {
+          position: sticky; top: 0; z-index: 10;
+          display: flex; justify-content: space-between; align-items: baseline;
+          padding: 40px 6vw 0;
+          background: linear-gradient(to bottom, #000 60%, transparent);
         }
         .fp__brand {
           font-size: 13px; font-weight: 700;
-          letter-spacing: 0.25em; text-transform: uppercase;
-          color: #fff; margin-bottom: 60px;
+          letter-spacing: 0.25em; text-transform: uppercase; color: #fff;
         }
-        .fp__list {
-          list-style: none;
-          display: flex; flex-direction: column;
-          gap: 4px; overflow-y: auto; flex: 1;
-          padding-bottom: 60px;
-        }
-        .fp__list::-webkit-scrollbar { display: none; }
-        .fp__item button {
-          background: none; border: none; outline: none;
-          color: rgba(255,255,255,0.35);
-          font-family: inherit; font-size: 13px; font-weight: 400;
-          letter-spacing: 0.04em; text-align: left;
-          padding: 7px 0; cursor: none;
-          transition: color 0.2s ease, transform 0.2s ease;
-          line-height: 1.3; width: 100%; text-transform: uppercase;
-        }
-        .fp__item button:hover,
-        .fp__item.active button { color: #fff; transform: translateX(6px); }
-        .fp__label {
-          position: absolute; bottom: 48px; right: 48px;
-          z-index: 10; text-align: right;
-        }
-        .fp__label-eyebrow {
+        .fp__eyebrow {
           font-size: 11px; font-weight: 600;
           letter-spacing: 0.2em; text-transform: uppercase;
-          color: rgba(255,255,255,0.5); margin-bottom: 4px;
+          color: rgba(255,255,255,0.4);
         }
-        .fp__label-title {
-          font-size: 15px; font-weight: 500;
-          letter-spacing: 0.06em; text-transform: uppercase; color: #fff;
+        .fp__list {
+          list-style: none; padding: 24px 0 80px; position: relative; z-index: 2;
         }
-        @media (max-width: 640px) {
-          .fp__sidebar { width: 100%; padding: 32px 24px; }
-          .fp__label { display: none; }
+        .fp__item {
+          border-top: 1px solid rgba(255,255,255,0.08);
+        }
+        .fp__item:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .fp__item button {
+          background: none; border: none; outline: none;
+          display: block; width: 100%;
+          padding: 18px 6vw;
+          font-family: inherit;
+          font-size: clamp(22px, 3.8vw, 58px);
+          font-weight: 400; letter-spacing: 0.03em;
+          text-transform: uppercase; text-align: left;
+          color: rgba(255,255,255,0.2);
+          cursor: none;
+          transition: color 0.2s ease, padding-left 0.2s ease;
+          line-height: 1.1;
+        }
+        .fp__item button:hover,
+        .fp__item.active button {
+          color: #fff;
+          padding-left: calc(6vw + 12px);
         }
       `}</style>
     </section>
