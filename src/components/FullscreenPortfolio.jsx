@@ -170,7 +170,16 @@ export default function FullscreenPortfolio() {
 
   return (
     <section className="fp">
-      <div className="fp__panel" style={{ backgroundImage: `url(${PROJECTS[activeIndex].thumb})` }} />
+      <div className="fp__bg">
+        {PROJECTS.map((p, i) => (
+          <div
+            key={i}
+            className={`fp__bg-layer${i === activeIndex ? ' active' : ''}`}
+            style={{ backgroundImage: `url(${p.thumb})` }}
+          />
+        ))}
+      </div>
+      <div className="fp__vignette" />
 
       <header className="fp__header">
         <div className="fp__brand">FERAL</div>
@@ -199,20 +208,23 @@ export default function FullscreenPortfolio() {
           position: relative; min-height: 100vh;
           background: #000; overflow: hidden;
         }
-        .fp__panel {
-          position: fixed; right: 6vw; top: 50%;
-          transform: translateY(-50%);
-          width: min(38vw, 560px); aspect-ratio: 16/10;
+        .fp__bg { position: fixed; inset: 0; z-index: 0; }
+        .fp__bg-layer {
+          position: absolute; inset: 0;
           background-size: cover; background-position: center;
-          pointer-events: none; z-index: 1;
-          transition: background-image 0s, opacity 0.4s ease;
-          border-radius: 4px;
+          opacity: 0; transition: opacity 0.7s ease;
+        }
+        .fp__bg-layer.active { opacity: 1; }
+        .fp__vignette {
+          position: fixed; inset: 0; z-index: 1; pointer-events: none;
+          background:
+            linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 100%),
+            linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.4) 100%);
         }
         .fp__header {
           position: sticky; top: 0; z-index: 10;
           display: flex; justify-content: space-between; align-items: baseline;
           padding: 40px 6vw 0;
-          background: linear-gradient(to bottom, #000 60%, transparent);
         }
         .fp__brand {
           font-size: 13px; font-weight: 700;
@@ -224,7 +236,7 @@ export default function FullscreenPortfolio() {
           color: rgba(255,255,255,0.4);
         }
         .fp__list {
-          list-style: none; padding: 24px 0 80px; position: relative; z-index: 2;
+          list-style: none; padding: 24px 0 80px; position: relative; z-index: 3;
         }
         .fp__item {
           border-top: 1px solid rgba(255,255,255,0.08);
@@ -235,7 +247,7 @@ export default function FullscreenPortfolio() {
           display: block; width: 100%;
           padding: 18px 6vw;
           font-family: inherit;
-          font-size: clamp(22px, 3.8vw, 58px);
+          font-size: clamp(18px, 3vw, 46px);
           font-weight: 400; letter-spacing: 0.03em;
           text-transform: uppercase; text-align: left;
           color: rgba(255,255,255,0.2);
