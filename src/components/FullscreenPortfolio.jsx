@@ -161,6 +161,7 @@ export default function FullscreenPortfolio() {
           list-style: none;
           display: flex; flex-direction: column;
           gap: 4px; overflow-y: auto; flex: 1;
+          padding-bottom: 60px;
         }
         .fp__list::-webkit-scrollbar { display: none; }
         .fp__item button {
