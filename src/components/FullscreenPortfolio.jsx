@@ -164,7 +164,7 @@ export default function FullscreenPortfolio() {
         }
         .fp__list::-webkit-scrollbar { display: none; }
         .fp__item button {
-          background: none; border: none;
+          background: none; border: none; outline: none;
           color: rgba(255,255,255,0.35);
           font-family: inherit; font-size: 13px; font-weight: 400;
           letter-spacing: 0.04em; text-align: left;
