@@ -1,14 +1,9 @@
 import { useState, lazy, Suspense } from 'react';
 import CustomCursor from './components/CustomCursor';
 import FeralReveal from './components/FeralReveal';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Marquee from './components/Marquee';
-import About from './components/About';
+import FullscreenPortfolio from './components/FullscreenPortfolio';
 import './index.css';
 
-const Portfolio = lazy(() => import('./components/Portfolio'));
-const Contact = lazy(() => import('./components/Contact'));
 const BottomCTA = lazy(() => import('./components/BottomCTA'));
 
 function Impressum() {
@@ -39,27 +34,17 @@ function Impressum() {
           padding: 48px 40px;
         }
         .impressum__inner {
-          max-width: 1480px;
-          margin: 0 auto;
-          display: flex;
-          gap: 60px;
-          flex-wrap: wrap;
-          font-size: 12px;
-          color: rgba(255,255,255,0.35);
-          line-height: 1.9;
-          font-family: 'Helvetica Neue', sans-serif;
+          max-width: 1480px; margin: 0 auto;
+          display: flex; gap: 60px; flex-wrap: wrap;
+          font-size: 12px; color: rgba(255,255,255,0.35);
+          line-height: 1.9; font-family: 'Helvetica Neue', sans-serif;
         }
         .impressum__heading {
-          font-weight: 600;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: rgba(255,255,255,0.5);
+          font-weight: 600; letter-spacing: 0.08em;
+          text-transform: uppercase; color: rgba(255,255,255,0.5);
           margin-bottom: 4px;
         }
-        .impressum a {
-          color: rgba(255,255,255,0.35);
-          text-decoration: none;
-        }
+        .impressum a { color: rgba(255,255,255,0.35); text-decoration: none; }
         .impressum a:hover { color: rgba(255,255,255,0.6); }
         @media (max-width: 640px) {
           .impressum { padding: 40px 24px; }
@@ -78,22 +63,14 @@ export default function App() {
       <CustomCursor />
       <FeralReveal onComplete={() => setLoaded(true)} />
       <div className={`site ${loaded ? 'site--loaded' : ''}`}>
-        <Navbar />
-        <Hero loaded={loaded} />
-        <Marquee />
-        <About />
+        <FullscreenPortfolio />
         <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-          <Portfolio />
-          <Contact />
           <BottomCTA />
         </Suspense>
         <Impressum />
       </div>
       <style>{`
-        .site {
-          opacity: 0;
-          transition: opacity 0.6s ease;
-        }
+        .site { opacity: 0; transition: opacity 0.6s ease; }
         .site--loaded { opacity: 1; }
       `}</style>
     </>
