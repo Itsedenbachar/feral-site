@@ -4,17 +4,30 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', onScroll);
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 50);
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const scrollToId = (id) => (e) => {
+    e.preventDefault();
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
       <a href="/" className="navbar__logo">FERAL</a>
       <div className="navbar__links">
-        <a href="#portfolio" className="navbar__link">Work</a>
-        <a href="#contact" className="navbar__link">Contact</a>
+        <a href="#portfolio" className="navbar__link" onClick={scrollToId('portfolio')}>Work</a>
+        <a href="#contact" className="navbar__link" onClick={scrollToId('contact')}>Contact</a>
       </div>
       <style>{`
         .navbar {

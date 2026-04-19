@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import CustomCursor from './components/CustomCursor';
 import FeralReveal from './components/FeralReveal';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
 import About from './components/About';
-import Portfolio from './components/Portfolio';
-import Contact from './components/Contact';
-import BottomCTA from './components/BottomCTA';
 import './index.css';
+
+const Portfolio = lazy(() => import('./components/Portfolio'));
+const Contact = lazy(() => import('./components/Contact'));
+const BottomCTA = lazy(() => import('./components/BottomCTA'));
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
@@ -22,9 +23,11 @@ export default function App() {
         <Hero loaded={loaded} />
         <Marquee />
         <About />
-        <Portfolio />
-        <Contact />
-        <BottomCTA />
+        <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+          <Portfolio />
+          <Contact />
+          <BottomCTA />
+        </Suspense>
       </div>
       <style>{`
         .site {

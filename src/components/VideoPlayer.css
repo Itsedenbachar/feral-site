@@ -1,0 +1,149 @@
+.vl-player-wrap {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  cursor: none;
+}
+
+.vl-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #000;
+}
+
+/* Bottom controls: single-line bar */
+.vl-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.vl-controls-visible {
+  opacity: 1;
+}
+
+.vl-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 12px 20px 14px;
+  position: relative;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 100%);
+}
+
+/* Play/Pause text label (leftmost, crossfade) */
+.vl-play-label {
+  position: relative;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: 0.06em;
+  cursor: none;
+  user-select: none;
+  flex-shrink: 0;
+  margin-right: 20px;
+  min-width: 38px;
+}
+
+.vl-label-text {
+  transition: opacity 250ms ease;
+  opacity: 1;
+}
+
+.vl-label-abs {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.vl-label-hidden {
+  opacity: 0;
+}
+
+/* Icon buttons */
+.vl-ctrl-btn {
+  background: none;
+  border: none;
+  cursor: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 150ms ease;
+  padding: 0;
+}
+.vl-ctrl-btn:hover { opacity: 1; }
+
+/* Timecode */
+.vl-timecode {
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.6);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin: 0 24px;
+}
+
+/* Progress bar: fills remaining space */
+.vl-progress {
+  position: relative;
+  height: 4px;
+  flex: 1;
+  min-width: 0;
+  cursor: none;
+  overflow: visible;
+  margin-right: 16px;
+  border-radius: 4px;
+}
+
+/* Larger click target than the visible bar */
+.vl-progress::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  bottom: -10px;
+}
+
+.vl-progress-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-50%);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.vl-progress-buffered {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-50%);
+  border-radius: 2px;
+  pointer-events: none;
+}
+
+.vl-progress-played {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: #ffffff;
+  border-radius: 4px;
+  pointer-events: none;
+}

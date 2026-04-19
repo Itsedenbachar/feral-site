@@ -1,5 +1,11 @@
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
+
+const VideoPlayer = lazy(() => import('./VideoPlayer'));
+
+function isHlsUrl(url) {
+  return !!url && /\.m3u8(\?|$)/i.test(url);
+}
 
 function getPreviewUrl(url) {
   if (!url) return null;
@@ -28,7 +34,7 @@ function getLightboxUrl(url) {
   return url;
 }
 
-function Lightbox({ url, title, onClose }) {
+function Lightbox({ url, title, thumbnailUrl, onClose }) {
   useEffect(() => {
     document.body.classList.add('modal-open');
     const onKey = (e) => { if (e.key === 'Escape') onClose(); };
@@ -39,20 +45,27 @@ function Lightbox({ url, title, onClose }) {
     };
   }, [onClose]);
 
-  const lightboxUrl = getLightboxUrl(url);
+  const useCustomPlayer = isHlsUrl(url);
+  const lightboxUrl = useCustomPlayer ? null : getLightboxUrl(url);
 
   return createPortal(
     <div className="lightbox" onClick={onClose}>
       <div className="lightbox__inner" onClick={e => e.stopPropagation()}>
         <button className="lightbox__close" onClick={onClose}>✕</button>
-        <iframe
-          src={lightboxUrl}
-          frameBorder="0"
-          allow="autoplay; fullscreen; picture-in-picture"
-          allowFullScreen
-          title={title}
-          className="lightbox__iframe"
-        />
+        {useCustomPlayer ? (
+          <Suspense fallback={<div className="lightbox__loading" />}>
+            <VideoPlayer src={url} poster={thumbnailUrl} />
+          </Suspense>
+        ) : (
+          <iframe
+            src={lightboxUrl}
+            frameBorder="0"
+            allow="autoplay; fullscreen; picture-in-picture"
+            allowFullScreen
+            title={title}
+            className="lightbox__iframe"
+          />
+        )}
       </div>
       <style>{`
         .lightbox {
@@ -84,6 +97,10 @@ function Lightbox({ url, title, onClose }) {
         .lightbox__iframe {
           width: 100%; height: 100%;
           border: none;
+        }
+        .lightbox__loading {
+          width: 100%; height: 100%;
+          background: #000;
         }
         .lightbox__close {
           position: absolute;
@@ -158,7 +175,7 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
         style={{ animationDelay: `${(index % 6) * 0.05}s` }}
       >
         <div className="video-card__thumb">
-          <img src={thumbnailUrl} alt={title} loading="lazy" />
+          <img src={thumbnailUrl} alt={title} loading="lazy" decoding="async" />
         </div>
         {previewUrl && (
           <iframe
@@ -183,6 +200,7 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
         <Lightbox
           url={videoUrl}
           title={title}
+          thumbnailUrl={thumbnailUrl}
           onClose={() => setLightboxOpen(false)}
         />
       )}

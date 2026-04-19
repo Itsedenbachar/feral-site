@@ -10,10 +10,13 @@ export default function CustomCursor() {
     let mouseX = 0, mouseY = 0;
     let ringX = 0, ringY = 0;
     let animId;
+    let lastMoveTime = Date.now();
+    let currentOpacity = 1;
 
     const onMove = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+      lastMoveTime = Date.now();
       if (dotRef.current) {
         dotRef.current.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
       }
@@ -24,6 +27,17 @@ export default function CustomCursor() {
       ringY += (mouseY - ringY) * 0.12;
       if (ringRef.current) {
         ringRef.current.style.transform = `translate(${ringX - 16}px, ${ringY - 16}px)`;
+        // Hide the cursor only when a modal is open AND mousemove has gone
+        // silent for >150ms — i.e., the pointer is parked over a cross-origin
+        // iframe inside the modal. Any real movement immediately restores it.
+        const modalOpen = document.body.classList.contains('modal-open');
+        const stale = modalOpen && (Date.now() - lastMoveTime > 150);
+        const targetOpacity = stale ? 0 : 1;
+        if (targetOpacity !== currentOpacity) {
+          ringRef.current.style.opacity = String(targetOpacity);
+          if (dotRef.current) dotRef.current.style.opacity = String(targetOpacity);
+          currentOpacity = targetOpacity;
+        }
       }
       animId = requestAnimationFrame(animate);
     };
@@ -40,34 +54,35 @@ export default function CustomCursor() {
     const onEnterLink = () => ringRef.current?.classList.add('hovering');
     const onLeaveLink = () => ringRef.current?.classList.remove('hovering');
 
+    // Delegated hover detection — bubble-safe, no DOM mutation observer needed.
+    const onOver = (e) => {
+      if (e.target.closest && e.target.closest('a, button, [data-cursor-hover]')) {
+        onEnterLink();
+      }
+    };
+    const onOut = (e) => {
+      const from = e.target.closest && e.target.closest('a, button, [data-cursor-hover]');
+      if (!from) return;
+      const to = e.relatedTarget && e.relatedTarget.closest
+        ? e.relatedTarget.closest('a, button, [data-cursor-hover]')
+        : null;
+      if (to !== from) onLeaveLink();
+    };
+
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mousedown', onDown);
     document.addEventListener('mouseup', onUp);
+    document.addEventListener('mouseover', onOver);
+    document.addEventListener('mouseout', onOut);
     animate();
-
-    const links = document.querySelectorAll('a, button, [data-cursor-hover]');
-    links.forEach(el => {
-      el.addEventListener('mouseenter', onEnterLink);
-      el.addEventListener('mouseleave', onLeaveLink);
-    });
-
-    const observer = new MutationObserver(() => {
-      const links = document.querySelectorAll('a, button, [data-cursor-hover]');
-      links.forEach(el => {
-        el.removeEventListener('mouseenter', onEnterLink);
-        el.removeEventListener('mouseleave', onLeaveLink);
-        el.addEventListener('mouseenter', onEnterLink);
-        el.addEventListener('mouseleave', onLeaveLink);
-      });
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
 
     return () => {
       document.removeEventListener('mousemove', onMove);
       document.removeEventListener('mousedown', onDown);
       document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('mouseover', onOver);
+      document.removeEventListener('mouseout', onOut);
       cancelAnimationFrame(animId);
-      observer.disconnect();
     };
   }, []);
 
@@ -83,7 +98,6 @@ export default function CustomCursor() {
           pointer-events: none;
           z-index: 99999;
           mix-blend-mode: difference;
-          transition: transform 0.05s ease;
           will-change: transform;
         }
         .cursor-ring {

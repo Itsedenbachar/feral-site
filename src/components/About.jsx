@@ -1,94 +1,35 @@
 import { useEffect, useRef } from 'react';
 
-function ScrollRippleImage({ imageUrl }) {
-  const imgRef = useRef(null);
-  const turbRef = useRef(null);
-  const dispRef = useRef(null);
-  const velRef = useRef(0);
-  const seedRef = useRef(0);
-  const rafRef = useRef(null);
-  const filterId = useRef(`ripple-${Math.random().toString(36).slice(2)}`);
-
-  useEffect(() => {
-    const animate = () => {
-      velRef.current *= 0.91;
-      if (Math.abs(velRef.current) > 0.001) {
-        seedRef.current += velRef.current * 0.1;
-        if (turbRef.current) turbRef.current.setAttribute('seed', seedRef.current);
-        const scale = 7 + Math.abs(velRef.current) * 12;
-        if (dispRef.current) dispRef.current.setAttribute('scale', scale);
-      } else {
-        if (dispRef.current) dispRef.current.setAttribute('scale', 7);
-      }
-      rafRef.current = requestAnimationFrame(animate);
-    };
-
-    const onWheel = (e) => {
-      velRef.current += e.deltaY * 0.004;
-    };
-    const onScroll = () => {
-      velRef.current += 0.5;
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    rafRef.current = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('wheel', onWheel);
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
-  }, []);
-
-  const id = filterId.current;
-
+function AboutImage({ imageUrl }) {
   return (
-    <div className="ripple-wrap">
-      <svg width="0" height="0" style={{ position: 'absolute' }}>
-        <defs>
-          <filter id={id} x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              ref={turbRef}
-              type="turbulence"
-              baseFrequency="0.002 0.018"
-              numOctaves="2"
-              seed="0"
-              result="turbulence"
-            />
-            <feDisplacementMap
-              ref={dispRef}
-              in="SourceGraphic"
-              in2="turbulence"
-              scale="7"
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="displaced"
-            />
-          </filter>
-        </defs>
-      </svg>
+    <div className="about-img-wrap">
       <img
-        ref={imgRef}
         src={imageUrl}
         alt="FERAL"
-        className="ripple-img"
-        style={{ filter: `url(#${id})` }}
+        className="about-img"
+        loading="lazy"
+        decoding="async"
       />
       <style>{`
-        .ripple-wrap {
+        .about-img-wrap {
           position: relative;
           width: 100%;
           max-width: 551px;
           border-radius: 12px;
           overflow: hidden;
         }
-        .ripple-img {
+        .about-img {
           width: 100%;
           aspect-ratio: 551/405;
           object-fit: cover;
           display: block;
           border-radius: 12px;
+          transform: scale(1);
+          transition: transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+          will-change: transform;
+        }
+        .about.in-view .about-img {
+          transform: scale(1.04);
         }
       `}</style>
     </div>
@@ -133,14 +74,21 @@ export default function About() {
       <DotGrid />
       <div className="about__inner">
         <div className="about__left">
-          <ScrollRippleImage imageUrl="https://framerusercontent.com/images/wHMk5TqL5smgOMi9bgGX1caA944.jpg" />
+          <AboutImage imageUrl="https://framerusercontent.com/images/wHMk5TqL5smgOMi9bgGX1caA944.jpg" />
         </div>
         <div className="about__right">
           <p className="about__body">
             Two filmmakers, one fluid workflow. We're wired for collaboration — working solo or integrating with teams who push as hard as we do.
           </p>
           <p className="about__sub">Commercial, Music Videos and Film</p>
-          <a href="#portfolio" className="about__btn">
+          <a
+            href="#portfolio"
+            className="about__btn"
+            onClick={(e) => {
+              e.preventDefault();
+              document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
             SEE WORKS
             <span className="about__btn-arrow">→</span>
           </a>

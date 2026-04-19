@@ -171,7 +171,9 @@ export default function BottomCTA() {
   return (
     <section className="bottom-cta">
       {/* Retro grid bg */}
-      <div className="bottom-cta__grid-bg" />
+      <div className="bottom-cta__grid-bg">
+        <div className="bottom-cta__grid-mover" />
+      </div>
 
       {/* Contact ticker */}
       <div className="contact-ticker">
@@ -198,7 +200,7 @@ export default function BottomCTA() {
                 key={idx}
                 className={`carousel__slide carousel__slide--${pos}`}
               >
-                <img src={BTS_IMAGES[idx]} alt="BTS" />
+                <img src={BTS_IMAGES[idx]} alt="BTS" loading="lazy" decoding="async" />
               </div>
             ))}
           </div>
@@ -232,18 +234,27 @@ export default function BottomCTA() {
         .bottom-cta__grid-bg {
           position: absolute;
           inset: 0;
+          transform: perspective(600px) rotateX(40deg) scaleY(2);
+          transform-origin: bottom center;
+          pointer-events: none;
+          overflow: hidden;
+        }
+        .bottom-cta__grid-mover {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: -60px;
+          bottom: -60px;
           background:
             linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
             linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
           background-size: 60px 60px;
-          transform: perspective(600px) rotateX(40deg) scaleY(2);
-          transform-origin: bottom center;
           animation: gridMove 8s linear infinite;
-          pointer-events: none;
+          will-change: transform;
         }
         @keyframes gridMove {
-          from { background-position: 0 0; }
-          to { background-position: 0 60px; }
+          from { transform: translateY(0); }
+          to { transform: translateY(60px); }
         }
         .contact-ticker {
           border-top: 1px solid rgba(255,255,255,0.08);
