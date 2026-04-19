@@ -102,67 +102,66 @@ export default function FullscreenPortfolio() {
   if (isMobile) {
     return (
       <section className="fpm">
-        <div className="fpm__brand">FERAL</div>
-        {PROJECTS.map((p, i) => (
-          <div
-            key={i}
-            className="fpm__card"
-            onClick={() => setLightboxProject(p)}
-          >
-            <img
-              src={p.thumb}
-              alt={p.title}
-              loading="lazy"
-              decoding="async"
-              className="fpm__img"
-            />
-            <div className="fpm__overlay" />
-            <div className="fpm__caption">
-              <div className="fpm__eyebrow">Selected Work</div>
+        <div className="fpm__header">
+          <div className="fpm__brand">FERAL</div>
+          <div className="fpm__eyebrow">Selected Work</div>
+        </div>
+        <div className="fpm__grid">
+          {PROJECTS.map((p, i) => (
+            <div
+              key={i}
+              className="fpm__card"
+              onClick={() => setLightboxProject(p)}
+            >
+              <div className="fpm__thumb">
+                <img
+                  src={p.thumb}
+                  alt={p.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
               <div className="fpm__title">{p.title}</div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
         {lightboxProject && (
           <Lightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
         )}
         <style>{`
-          .fpm { position: relative; background: #000; }
+          .fpm { background: #000; padding: 24px 14px 40px; }
+          .fpm__header {
+            padding: 12px 6px 24px;
+            display: flex; justify-content: space-between; align-items: baseline;
+          }
           .fpm__brand {
-            position: fixed; top: 20px; left: 24px; z-index: 20;
             font-size: 13px; font-weight: 700;
-            letter-spacing: 0.25em; text-transform: uppercase;
-            color: #fff; mix-blend-mode: difference;
-          }
-          .fpm__card {
-            position: relative; width: 100%; height: 88vh;
-            overflow: hidden; cursor: pointer;
-          }
-          .fpm__img {
-            position: absolute; inset: 0;
-            width: 100%; height: 100%;
-            object-fit: cover; display: block;
-          }
-          .fpm__overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to bottom,
-              rgba(0,0,0,0.25) 0%,
-              transparent 25%,
-              transparent 55%,
-              rgba(0,0,0,0.85) 100%);
-          }
-          .fpm__caption {
-            position: absolute; left: 24px; right: 24px; bottom: 36px;
-            color: #fff;
+            letter-spacing: 0.25em; text-transform: uppercase; color: #fff;
           }
           .fpm__eyebrow {
             font-size: 10px; font-weight: 600;
             letter-spacing: 0.2em; text-transform: uppercase;
-            color: rgba(255,255,255,0.6); margin-bottom: 6px;
+            color: rgba(255,255,255,0.45);
+          }
+          .fpm__grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px 10px;
+          }
+          .fpm__card { cursor: pointer; }
+          .fpm__thumb {
+            width: 100%; aspect-ratio: 16/10;
+            overflow: hidden; border-radius: 4px; background: #111;
+          }
+          .fpm__thumb img {
+            width: 100%; height: 100%;
+            object-fit: cover; display: block;
           }
           .fpm__title {
-            font-size: 18px; font-weight: 500;
-            letter-spacing: 0.04em; text-transform: uppercase;
+            margin-top: 8px;
+            font-size: 10px; font-weight: 500;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: rgba(255,255,255,0.75); line-height: 1.35;
           }
         `}</style>
       </section>
