@@ -206,9 +206,8 @@ export default function FullscreenPortfolio() {
       <style>{`
         .fp {
           position: relative; min-height: 100vh;
-          background: #000; overflow: hidden;
         }
-        .fp__bg { position: fixed; inset: 0; z-index: -1; }
+        .fp__bg { position: fixed; inset: 0; z-index: 0; }
         .fp__bg-layer {
           position: absolute; inset: 0;
           background-size: cover; background-position: center;

@@ -27,6 +27,7 @@ function Impressum() {
       </div>
       <style>{`
         .impressum {
+          position: relative; z-index: 1;
           background: #000;
           border-top: 1px solid rgba(255,255,255,0.06);
           padding: 48px 40px;
