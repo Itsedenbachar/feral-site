@@ -232,10 +232,7 @@ export default function FullscreenPortfolio() {
         .fp__list {
           list-style: none; padding: 24px 0 80px; position: relative; z-index: 3;
         }
-        .fp__item {
-          border-top: 1px solid rgba(255,255,255,0.08);
-        }
-        .fp__item:last-child { border-bottom: 1px solid rgba(255,255,255,0.08); }
+        .fp__item {}
         .fp__item button {
           background: none; border: none; outline: none;
           display: block; width: 100%;
