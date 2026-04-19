@@ -215,12 +215,7 @@ export default function FullscreenPortfolio() {
           opacity: 0; transition: opacity 0.7s ease;
         }
         .fp__bg-layer.active { opacity: 1; }
-        .fp__vignette {
-          position: fixed; inset: 0; z-index: 1; pointer-events: none;
-          background:
-            linear-gradient(to right, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.5) 55%, rgba(0,0,0,0.2) 100%),
-            linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.4) 100%);
-        }
+        .fp__vignette { display: none; }
         .fp__header {
           position: sticky; top: 0; z-index: 10;
           display: flex; justify-content: space-between; align-items: baseline;
