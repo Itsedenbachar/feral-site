@@ -1,10 +1,8 @@
-import { useState, lazy, Suspense } from 'react';
+import { useState } from 'react';
 import CustomCursor from './components/CustomCursor';
 import FeralReveal from './components/FeralReveal';
 import FullscreenPortfolio from './components/FullscreenPortfolio';
 import './index.css';
-
-const BottomCTA = lazy(() => import('./components/BottomCTA'));
 
 function Impressum() {
   return (
@@ -64,9 +62,6 @@ export default function App() {
       <FeralReveal onComplete={() => setLoaded(true)} />
       <div className={`site ${loaded ? 'site--loaded' : ''}`}>
         <FullscreenPortfolio />
-        <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-          <BottomCTA />
-        </Suspense>
         <Impressum />
       </div>
       <style>{`
