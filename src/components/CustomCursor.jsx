@@ -16,9 +16,11 @@ export default function CustomCursor() {
       mouseY = e.clientY;
       lastMoveTime = Date.now();
       if (dotRef.current) {
+        dotRef.current.style.opacity = '1';
         dotRef.current.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
       }
       if (ringRef.current) {
+        ringRef.current.style.opacity = '1';
         ringRef.current.style.transform = `translate(${mouseX - 16}px, ${mouseY - 16}px)`;
         const modalOpen = document.body.classList.contains('modal-open');
         const stale = modalOpen && (Date.now() - lastMoveTime > 150);
@@ -85,6 +87,7 @@ export default function CustomCursor() {
           z-index: 99999;
           mix-blend-mode: difference;
           will-change: transform;
+          opacity: 0;
         }
         .cursor-ring {
           position: fixed;
@@ -97,6 +100,7 @@ export default function CustomCursor() {
           mix-blend-mode: difference;
           will-change: transform;
           transition: width 0.2s ease, height 0.2s ease;
+          opacity: 0;
         }
         .cursor-dot.clicking { transform: scale(0.75) !important; }
         .cursor-ring.hovering {
