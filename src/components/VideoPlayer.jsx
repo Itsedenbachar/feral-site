@@ -15,19 +15,29 @@ export default function VideoPlayer({ src, poster }) {
   const [duration, setDuration] = useState(0);
   const [muted] = useState(false);
   const [showControls, setShowControls] = useState(true);
+  const [scrub, setScrub] = useState({ visible: false, x: 0, time: 0 });
+  const [levels, setLevels] = useState([]);
+  const [currentLevel, setCurrentLevel] = useState(-1);
+  const [showQuality, setShowQuality] = useState(false);
+
+  const muxId = src ? (src.match(/stream\.mux\.com\/([^.]+)\.m3u8/) || [])[1] : null;
 
   useEffect(() => {
     const v = videoRef.current;
     if (!v || !src) return;
 
-    if (v.canPlayType('application/vnd.apple.mpegurl')) {
-      v.src = src;
-    } else if (Hls.isSupported()) {
+    if (Hls.isSupported()) {
       if (hlsRef.current) hlsRef.current.destroy();
       const hls = new Hls();
       hlsRef.current = hls;
       hls.loadSource(src);
       hls.attachMedia(v);
+      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+        setLevels(data.levels.map((l, i) => ({ index: i, height: l.height })));
+        setCurrentLevel(-1);
+      });
+    } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
+      v.src = src;
     }
 
     return () => {
@@ -69,6 +79,22 @@ export default function VideoPlayer({ src, poster }) {
     if (!v || !v.duration) return;
     const rect = e.currentTarget.getBoundingClientRect();
     v.currentTime = ((e.clientX - rect.left) / rect.width) * v.duration;
+  };
+
+  const handleProgressMouseMove = (e) => {
+    const v = videoRef.current;
+    if (!v || !v.duration || !muxId) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const ratio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    setScrub({ visible: true, x: e.clientX - rect.left, time: Math.floor(ratio * v.duration) });
+  };
+
+  const handleProgressMouseLeave = () => setScrub(s => ({ ...s, visible: false }));
+
+  const selectLevel = (index) => {
+    if (hlsRef.current) hlsRef.current.currentLevel = index;
+    setCurrentLevel(index);
+    setShowQuality(false);
   };
 
   const toggleFullscreen = () => {
@@ -133,11 +159,46 @@ export default function VideoPlayer({ src, poster }) {
 
           <span className="vl-timecode">{fmt(currentTime)} / {fmt(duration)}</span>
 
-          <div className="vl-progress" onClick={handleSeek}>
+          <div
+            className="vl-progress"
+            onClick={handleSeek}
+            onMouseMove={handleProgressMouseMove}
+            onMouseLeave={handleProgressMouseLeave}
+          >
             <div className="vl-progress-track" />
             <div className="vl-progress-buffered" style={{ width: `${buffered}%` }} />
             <div className="vl-progress-played" style={{ width: `${progress}%` }} />
+            {muxId && scrub.visible && (
+              <div className="vl-scrub-preview" style={{ left: scrub.x }}>
+                <img
+                  src={`https://image.mux.com/${muxId}/thumbnail.jpg?time=${scrub.time}&width=160`}
+                  alt=""
+                />
+                <span className="vl-scrub-time">{fmt(scrub.time)}</span>
+              </div>
+            )}
           </div>
+
+          {muxId && (
+            <div className="vl-quality-wrap" onClick={e => e.stopPropagation()}>
+              {showQuality && (
+                <div className="vl-quality-menu">
+                  <button className={currentLevel === -1 ? 'active' : ''} onClick={() => selectLevel(-1)}>Auto</button>
+                  {[...levels].reverse().map(l => (
+                    <button key={l.index} className={currentLevel === l.index ? 'active' : ''} onClick={() => selectLevel(l.index)}>
+                      {l.height}p
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button className="vl-ctrl-btn" onClick={() => setShowQuality(v => !v)}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="3" />
+                  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                </svg>
+              </button>
+            </div>
+          )}
 
           <button className="vl-ctrl-btn vl-fullscreen-btn" onClick={toggleFullscreen}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">

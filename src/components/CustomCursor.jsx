@@ -59,11 +59,17 @@ export default function CustomCursor() {
       if (to !== from) onLeaveLink();
     };
 
+    const onLeave = () => {
+      if (dotRef.current) dotRef.current.style.opacity = '0';
+      if (ringRef.current) ringRef.current.style.opacity = '0';
+    };
+
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mousedown', onDown);
     document.addEventListener('mouseup', onUp);
     document.addEventListener('mouseover', onOver);
     document.addEventListener('mouseout', onOut);
+    document.addEventListener('mouseleave', onLeave);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
@@ -71,6 +77,7 @@ export default function CustomCursor() {
       document.removeEventListener('mouseup', onUp);
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout', onOut);
+      document.removeEventListener('mouseleave', onLeave);
     };
   }, []);
 

@@ -27,10 +27,10 @@ function Impressum() {
       </div>
       <style>{`
         .impressum {
-          position: relative; z-index: 1;
+          position: relative; z-index: 2;
           background: #000;
           border-top: 1px solid rgba(255,255,255,0.06);
-          padding: 48px 40px;
+          padding: 80px 40px;
         }
         .impressum__inner {
           max-width: 1480px; margin: 0 auto;
@@ -62,12 +62,15 @@ export default function App() {
       <CustomCursor />
       <FeralReveal onComplete={() => setLoaded(true)} />
       <div className={`site ${loaded ? 'site--loaded' : ''}`}>
-        <FullscreenPortfolio />
+        <div className="site__content">
+          <FullscreenPortfolio />
+        </div>
         <Impressum />
       </div>
       <style>{`
-        .site { opacity: 0; transition: opacity 0.6s ease; }
+        .site { opacity: 0; transition: opacity 0.6s ease; position: relative; }
         .site--loaded { opacity: 1; }
+        .site__content { position: relative; z-index: 1; }
       `}</style>
     </>
   );

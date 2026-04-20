@@ -2,24 +2,25 @@ import { useEffect, useRef } from 'react';
 import VideoCard from './VideoCard';
 
 const PROJECTS = [
-  { title: 'ZVEZDA — Short Film', thumbnail: 'https://framerusercontent.com/images/95V69KjMRtXphHTwh2yMvgsvk.jpg', video: 'https://vimeo.com/1146976260', comingSoon: false },
-  { title: 'AINKER SS26', thumbnail: 'https://framerusercontent.com/images/g95vL7DR4tEUb2ulOvR7vEq1tQ.png', video: 'https://iframe.mediadelivery.net/embed/457575/f3df6d6d-979d-48bc-90cd-ea18f1788ed2', comingSoon: false },
-  { title: 'YOUNG NIGHTS — Short Film', thumbnail: 'https://framerusercontent.com/images/DcjIDzMxgbfSJUEshu7pYaR5SA.jpg', video: null, comingSoon: true },
-  { title: 'ALEXANDER MALOFEEV — Prelude', thumbnail: 'https://framerusercontent.com/images/88q7DN3ZUSZyV5G26tYVQhjmGw.jpg', video: 'https://vimeo.com/1162708355', comingSoon: false },
-  { title: 'LYZA — TOT', thumbnail: 'https://framerusercontent.com/images/a5SS9HRw4thfvT5wCVC5luDMw0.jpg', video: 'https://vimeo.com/1161517747', comingSoon: false },
-  { title: 'BORN SHY FW26', thumbnail: 'https://framerusercontent.com/images/NepyIgemZlJWFxho5npKLnRzxME.jpg', video: 'https://vimeo.com/1171861807', comingSoon: false },
-  { title: 'MASH — Fashion Editorial', thumbnail: 'https://framerusercontent.com/images/WrFnVsLZ9jPgA45Quwgt4ChNOaQ.png', video: 'https://iframe.mediadelivery.net/embed/457575/591ec67c-1097-4551-8bef-dcee25b42383', comingSoon: false },
-  { title: 'ADIDAS', thumbnail: 'https://framerusercontent.com/images/EGtGCYqhOW6gqcf6weiEduNiUE.png', video: 'https://iframe.mediadelivery.net/embed/457575/37bc53e4-6350-4fd1-84a0-658005b71979', comingSoon: false },
-  { title: 'TAMIR GREENBERG — Pass You By', thumbnail: 'https://framerusercontent.com/images/fL92iKaIAWNBYlX3nwbcILJqg.jpg', video: 'https://vimeo.com/1003711808', comingSoon: false },
-  { title: 'ALEXANDER MALOFEEV — The Lark', thumbnail: 'https://framerusercontent.com/images/ccfstWtAQ6D6AXN0i7ujgGMI.jpg', video: 'https://vimeo.com/1162708659', comingSoon: false },
+  { title: 'SHOWREEL', thumbnail: 'https://image.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk/thumbnail.jpg', video: 'https://stream.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk.m3u8', comingSoon: false },
+  { title: 'ZVEZDA — Short Film', thumbnail: 'https://image.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ/thumbnail.jpg?time=73', video: 'https://stream.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ.m3u8', comingSoon: false },
+  { title: 'AINKER SS26', thumbnail: 'https://image.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ/thumbnail.jpg', video: 'https://stream.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ.m3u8', comingSoon: false },
+  { title: 'YOUNG NIGHTS — Short Film', thumbnail: 'https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.1.jpg', video: null, comingSoon: false, photos: ['https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.1.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.2.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.3.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.4.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.5.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.6.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.7.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.8.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.9.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131718_1.1.7.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131718_1.1.9.jpg'] },
+  { title: 'ALEXANDER MALOFEEV — Prelude', thumbnail: 'https://image.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE/thumbnail.jpg?time=4', video: 'https://stream.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE.m3u8', comingSoon: false },
+  { title: 'LYZA — TOT', thumbnail: 'https://image.mux.com/028Orv7pQZE022oa5Jbs4CrzqmFmgMTB6HRF3VtTnCpQg/thumbnail.jpg?time=16', video: 'https://stream.mux.com/028Orv7pQZE022oa5Jbs4CrzqmFmgMTB6HRF3VtTnCpQg.m3u8', comingSoon: false },
+  { title: 'BORN SHY FW26', thumbnail: 'https://image.mux.com/XTjGaTy02DMR6zDufzIPAr01OB3QEkuTDUwB4njx00lLzc/thumbnail.jpg?time=1', video: 'https://stream.mux.com/XTjGaTy02DMR6zDufzIPAr01OB3QEkuTDUwB4njx00lLzc.m3u8', comingSoon: false },
+  { title: 'SHELLY OHAD FW22', thumbnail: 'https://image.mux.com/V8FuIVhaDpayTSZjKQ01q02vxFWf16n9JiB02E2ebkIlg00/thumbnail.jpg', video: 'https://stream.mux.com/V8FuIVhaDpayTSZjKQ01q02vxFWf16n9JiB02E2ebkIlg00.m3u8', comingSoon: false },
+  { title: 'ADIDAS', thumbnail: 'https://image.mux.com/DTJUg2EtHyAnqEKKPYytQquolXyZQe027C9rcDipOods/thumbnail.jpg', video: 'https://stream.mux.com/DTJUg2EtHyAnqEKKPYytQquolXyZQe027C9rcDipOods.m3u8', comingSoon: false },
+  { title: 'TAMIR GREENBERG — Pass You By', thumbnail: 'https://image.mux.com/9EHh00l5BaP1O8e8YP7St4WzLjb75T71J00SNjm7pMKPE/thumbnail.jpg?time=41', video: 'https://stream.mux.com/9EHh00l5BaP1O8e8YP7St4WzLjb75T71J00SNjm7pMKPE.m3u8', comingSoon: false },
+  { title: 'ALEXANDER MALOFEEV — The Lark', thumbnail: 'https://image.mux.com/PPG3tvT8hquH3rFcPrXY7z23lcJNm67yWqHuWEVJlOg/thumbnail.jpg', video: 'https://stream.mux.com/PPG3tvT8hquH3rFcPrXY7z23lcJNm67yWqHuWEVJlOg.m3u8', comingSoon: false },
   { title: 'MASH — Fashion Editorial', thumbnail: 'https://framerusercontent.com/images/LK9MM6nfqEZCWbe8b79UxIA.jpg', video: 'https://vimeo.com/1135286242', comingSoon: false },
-  { title: 'AINKER FW25', thumbnail: 'https://framerusercontent.com/images/ofeIZxDJ02VE4QScIS8aVBz2Jzw.png', video: 'https://iframe.mediadelivery.net/embed/457575/d872d0b6-6307-410d-9f05-843df9c28a36', comingSoon: false },
-  { title: 'Matériau éternel - Motty Perry', thumbnail: 'https://framerusercontent.com/images/6BE2dw7aXAVGbqMc1wer8BIZTQs.jpg', video: 'https://vimeo.com/996677557', comingSoon: false },
-  { title: 'JHON LAUNDRY', thumbnail: 'https://framerusercontent.com/images/8J3GyX73dcdX4YlV3MDA0g82lgs.jpg', video: 'https://vimeo.com/660125933', comingSoon: false },
-  { title: 'STRONGFUL', thumbnail: 'https://framerusercontent.com/images/954SLi64wkZIGJfaxDmshPT2efQ.jpg', video: 'https://vimeo.com/765465571', comingSoon: false },
-  { title: 'TATAN — MV', thumbnail: 'https://framerusercontent.com/images/Z2sjnWWKrXYJFalA5vXhNUGGby4.jpg', video: 'https://vimeo.com/726039555', comingSoon: false },
-  { title: 'MASH — Fashion Editorial', thumbnail: 'https://framerusercontent.com/images/f65b5lJDNohM3u85D0m1EtVtg.jpg', video: 'https://vimeo.com/1084326507', comingSoon: false },
-  { title: 'ULIKE — Commercial', thumbnail: 'https://framerusercontent.com/images/sPsGUEQcewzHV1feudGhRyITlE.jpg', video: 'https://vimeo.com/1108859882', comingSoon: false },
+  { title: 'AINKER SS25', thumbnail: 'https://image.mux.com/zeCaPzfn1OBsO6SkjnuUf8QDuMnTC02kFc02kXam3jV9E/thumbnail.jpg', video: 'https://stream.mux.com/zeCaPzfn1OBsO6SkjnuUf8QDuMnTC02kFc02kXam3jV9E.m3u8', comingSoon: false },
+  { title: 'Matériau éternel - Motty Perry', thumbnail: 'https://image.mux.com/iycea00j0202SuL81oUVe5nn01uVrgTwn1jr1rjlAXwMOdY/thumbnail.jpg', video: 'https://stream.mux.com/iycea00j0202SuL81oUVe5nn01uVrgTwn1jr1rjlAXwMOdY.m3u8', comingSoon: false },
+  { title: 'JHON LAUNDRY', thumbnail: 'https://image.mux.com/D4xdOobmlNEHa6gxSxWSiQOSADw3yKMADtzVmnZ2opg/thumbnail.jpg', video: 'https://stream.mux.com/D4xdOobmlNEHa6gxSxWSiQOSADw3yKMADtzVmnZ2opg.m3u8', comingSoon: false },
+  { title: 'STRONGFUL', thumbnail: 'https://image.mux.com/MGS1V9pJkaR01Ki9LJ02qSyw8Nk3qa2WKRPPbzPQSQjbU/thumbnail.jpg', video: 'https://stream.mux.com/MGS1V9pJkaR01Ki9LJ02qSyw8Nk3qa2WKRPPbzPQSQjbU.m3u8', comingSoon: false },
+  { title: 'TATAN — MV', thumbnail: 'https://image.mux.com/18WdRm5hLbfomtalIbJwDwaxucoJrIriqtqHZuMdE2E/thumbnail.jpg', video: 'https://stream.mux.com/18WdRm5hLbfomtalIbJwDwaxucoJrIriqtqHZuMdE2E.m3u8', comingSoon: false },
+  { title: 'MASH — Fashion Editorial', thumbnail: 'https://image.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE/thumbnail.jpg', video: 'https://stream.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE.m3u8', comingSoon: false },
+  { title: 'ULIKE — Commercial', thumbnail: 'https://image.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500/thumbnail.jpg?time=0.5', video: 'https://stream.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500.m3u8', comingSoon: false },
 ];
 
 export default function Portfolio() {
@@ -53,6 +54,7 @@ export default function Portfolio() {
             videoUrl={p.video}
             thumbnailUrl={p.thumbnail}
             comingSoon={p.comingSoon}
+            photos={p.photos}
           />
         ))}
       </div>

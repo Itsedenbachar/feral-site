@@ -1,10 +1,18 @@
 import { useRef, useState, useEffect, useCallback, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
+import Hls from 'hls.js';
+import PhotoGallery from './PhotoGallery';
 
 const VideoPlayer = lazy(() => import('./VideoPlayer'));
 
 function isHlsUrl(url) {
   return !!url && /\.m3u8(\?|$)/i.test(url);
+}
+
+function getMuxPlaybackId(url) {
+  if (!url) return null;
+  const match = url.match(/stream\.mux\.com\/([^.]+)\.m3u8/);
+  return match ? match[1] : null;
 }
 
 function getPreviewUrl(url) {
@@ -35,23 +43,30 @@ function getLightboxUrl(url) {
 }
 
 function Lightbox({ url, title, thumbnailUrl, onClose }) {
+  const [closing, setClosing] = useState(false);
+
+  const handleClose = () => {
+    setClosing(true);
+    setTimeout(onClose, 500);
+  };
+
   useEffect(() => {
     document.body.classList.add('modal-open');
-    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const onKey = (e) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', onKey);
     return () => {
       document.body.classList.remove('modal-open');
       window.removeEventListener('keydown', onKey);
     };
-  }, [onClose]);
+  }, []);
 
   const useCustomPlayer = isHlsUrl(url);
   const lightboxUrl = useCustomPlayer ? null : getLightboxUrl(url);
 
   return createPortal(
-    <div className="lightbox" onClick={onClose}>
+    <div className={`lightbox${closing ? ' lightbox--closing' : ''}`} onClick={handleClose}>
       <div className="lightbox__inner" onClick={e => e.stopPropagation()}>
-        <button className="lightbox__close" onClick={onClose}>✕</button>
+        <button className="lightbox__close" onClick={handleClose}>✕</button>
         {useCustomPlayer ? (
           <Suspense fallback={<div className="lightbox__loading" />}>
             <VideoPlayer src={url} poster={thumbnailUrl} />
@@ -82,6 +97,11 @@ function Lightbox({ url, title, thumbnailUrl, onClose }) {
           from { opacity: 0; }
           to { opacity: 1; }
         }
+        @keyframes lbFadeOut {
+          from { opacity: 1; transform: scale(1); }
+          to { opacity: 0; transform: scale(0.97); }
+        }
+        .lightbox--closing { animation: lbFadeOut 0.5s cubic-bezier(0.4,0,0.2,1) forwards; }
         .lightbox__inner {
           position: relative;
           width: min(90vw, 1200px);
@@ -125,44 +145,74 @@ function Lightbox({ url, title, thumbnailUrl, onClose }) {
   );
 }
 
-export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, index }) {
+export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, photos, index }) {
   const [hovered, setHovered] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
   const iframeRef = useRef(null);
+  const previewVideoRef = useRef(null);
+  const hlsPreviewRef = useRef(null);
   const hoverTimer = useRef(null);
   const leaveTimer = useRef(null);
 
   const previewUrl = getPreviewUrl(videoUrl);
+  const muxPlaybackId = getMuxPlaybackId(videoUrl);
 
   const handleEnter = useCallback(() => {
     if (comingSoon) return;
     clearTimeout(leaveTimer.current);
     hoverTimer.current = setTimeout(() => {
       setHovered(true);
-      if (iframeRef.current && previewUrl) {
+      if (muxPlaybackId && previewVideoRef.current) {
+        const v = previewVideoRef.current;
+        v.classList.remove('video-card__preview-video--ready');
+        const src = `https://stream.mux.com/${muxPlaybackId}.m3u8`;
+        if (Hls.isSupported()) {
+          if (hlsPreviewRef.current) hlsPreviewRef.current.destroy();
+          const hls = new Hls({ startLevel: 0, maxBufferLength: 10 });
+          hlsPreviewRef.current = hls;
+          hls.loadSource(src);
+          hls.attachMedia(v);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => { v.play().catch(() => {}); });
+        } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
+          v.src = src;
+          v.play().catch(() => {});
+        }
+      } else if (iframeRef.current && previewUrl) {
         iframeRef.current.src = previewUrl;
       }
     }, 80);
-  }, [comingSoon, previewUrl]);
+  }, [comingSoon, muxPlaybackId, previewUrl]);
 
   const handleLeave = useCallback(() => {
     clearTimeout(hoverTimer.current);
     setHovered(false);
+    if (hlsPreviewRef.current) {
+      hlsPreviewRef.current.destroy();
+      hlsPreviewRef.current = null;
+    }
+    if (previewVideoRef.current) {
+      previewVideoRef.current.classList.remove('video-card__preview-video--ready');
+      previewVideoRef.current.pause();
+      previewVideoRef.current.removeAttribute('src');
+      previewVideoRef.current.load();
+    }
     leaveTimer.current = setTimeout(() => {
-      if (iframeRef.current) {
-        iframeRef.current.src = 'about:blank';
-      }
+      if (iframeRef.current) iframeRef.current.src = 'about:blank';
     }, 400);
   }, []);
 
   const handleClick = useCallback(() => {
-    if (comingSoon || !videoUrl) return;
+    if (comingSoon) return;
+    if (photos?.length) { setGalleryOpen(true); return; }
+    if (!videoUrl) return;
     setLightboxOpen(true);
-  }, [comingSoon, videoUrl]);
+  }, [comingSoon, videoUrl, photos]);
 
   useEffect(() => () => {
     clearTimeout(hoverTimer.current);
     clearTimeout(leaveTimer.current);
+    if (hlsPreviewRef.current) hlsPreviewRef.current.destroy();
   }, []);
 
   return (
@@ -187,6 +237,16 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
             title={`${title} preview`}
           />
         )}
+        {muxPlaybackId && (
+          <video
+            ref={previewVideoRef}
+            muted
+            loop
+            playsInline
+            className="video-card__preview-video"
+            onCanPlay={() => previewVideoRef.current?.classList.add('video-card__preview-video--ready')}
+          />
+        )}
         <div className="video-card__overlay">
           {comingSoon && (
             <span className="video-card__coming-soon">COMING SOON</span>
@@ -202,6 +262,13 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
           title={title}
           thumbnailUrl={thumbnailUrl}
           onClose={() => setLightboxOpen(false)}
+        />
+      )}
+      {galleryOpen && (
+        <PhotoGallery
+          title={title}
+          photos={photos}
+          onClose={() => setGalleryOpen(false)}
         />
       )}
       <style>{`
@@ -222,9 +289,7 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
         .video-card__thumb {
           position: absolute;
           inset: 0;
-          transition: opacity 0.35s ease;
         }
-        .video-card--hovered .video-card__thumb { opacity: 0; }
         .video-card__thumb img {
           width: 100%; height: 100%;
           object-fit: cover;
@@ -237,6 +302,16 @@ export default function VideoCard({ title, videoUrl, thumbnailUrl, comingSoon, i
           border: none;
           pointer-events: none;
         }
+        .video-card__preview-video {
+          position: absolute;
+          inset: 0;
+          width: 100%; height: 100%;
+          object-fit: cover;
+          pointer-events: none;
+          opacity: 0;
+          transition: opacity 0.5s ease;
+        }
+        .video-card__preview-video--ready { opacity: 1; }
         .video-card__overlay {
           position: absolute;
           inset: 0;
