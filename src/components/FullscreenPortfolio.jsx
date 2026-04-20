@@ -180,6 +180,7 @@ export default function FullscreenPortfolio() {
   const handleCategoryChange = (cat) => {
     setActiveView('projects');
     setActiveCategory(cat);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     const vis = (p) => cat === 'all' || p.cat === cat;
     if (!vis(PROJECTS[activeIndex])) {
       const first = PROJECTS.findIndex(p => vis(p));
