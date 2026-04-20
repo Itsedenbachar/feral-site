@@ -109,12 +109,12 @@ export default function CustomCursor() {
           transition: width 0.2s ease, height 0.2s ease;
           opacity: 0;
         }
-        .cursor-dot.clicking { transform: scale(0.75) !important; }
+        .cursor-dot.clicking { scale: 0.75; }
         .cursor-ring.hovering {
           width: 48px; height: 48px;
           margin-left: -8px; margin-top: -8px;
         }
-        .cursor-ring.clicking { transform: scale(0.75) !important; }
+        .cursor-ring.clicking { scale: 0.75; }
         @media (max-width: 768px) {
           .cursor-dot, .cursor-ring { display: none; }
         }
