@@ -64,12 +64,22 @@ export default function CustomCursor() {
       if (ringRef.current) ringRef.current.style.opacity = '0';
     };
 
+    const CURSOR_TARGETS = '.fp__filter-btn, .fp__item button';
+    const onContextMenu = (e) => {
+      if (e.target.closest && e.target.closest(CURSOR_TARGETS)) e.preventDefault();
+    };
+    const onSelectStart = (e) => {
+      if (e.target.closest && e.target.closest(CURSOR_TARGETS)) e.preventDefault();
+    };
+
     document.addEventListener('mousemove', onMove);
     document.addEventListener('mousedown', onDown);
     document.addEventListener('mouseup', onUp);
     document.addEventListener('mouseover', onOver);
     document.addEventListener('mouseout', onOut);
     document.addEventListener('mouseleave', onLeave);
+    document.addEventListener('contextmenu', onContextMenu);
+    document.addEventListener('selectstart', onSelectStart);
 
     return () => {
       document.removeEventListener('mousemove', onMove);
@@ -78,6 +88,8 @@ export default function CustomCursor() {
       document.removeEventListener('mouseover', onOver);
       document.removeEventListener('mouseout', onOut);
       document.removeEventListener('mouseleave', onLeave);
+      document.removeEventListener('contextmenu', onContextMenu);
+      document.removeEventListener('selectstart', onSelectStart);
     };
   }, []);
 

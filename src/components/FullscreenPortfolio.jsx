@@ -27,7 +27,7 @@ const PROJECTS = [
   { title: 'Adidas RUNWAY',                         cat: 'commercial', thumb: 'https://image.mux.com/DTJUg2EtHyAnqEKKPYytQquolXyZQe027C9rcDipOods/thumbnail.jpg',   video: 'https://stream.mux.com/DTJUg2EtHyAnqEKKPYytQquolXyZQe027C9rcDipOods.m3u8' },
   { title: 'TAMIR GREENBERG — Pass You By',  cat: 'music',      thumb: 'https://image.mux.com/9EHh00l5BaP1O8e8YP7St4WzLjb75T71J00SNjm7pMKPE/thumbnail.jpg?time=41',   video: 'https://stream.mux.com/9EHh00l5BaP1O8e8YP7St4WzLjb75T71J00SNjm7pMKPE.m3u8' },
   { title: 'ALEXANDER MALOFEEV — The Lark',  cat: 'music',      thumb: 'https://image.mux.com/PPG3tvT8hquH3rFcPrXY7z23lcJNm67yWqHuWEVJlOg/thumbnail.jpg',    video: 'https://stream.mux.com/PPG3tvT8hquH3rFcPrXY7z23lcJNm67yWqHuWEVJlOg.m3u8' },
-  { title: 'MASH — Fashion Editorial II',    cat: 'fashion',    thumb: 'https://framerusercontent.com/images/LK9MM6nfqEZCWbe8b79UxIA.jpg',     video: 'https://vimeo.com/1135286242' },
+  { title: 'MASH — Fashion Editorial II',    cat: 'fashion',    thumb: 'https://image.mux.com/pUdnGN7FuEbMrK9nRTchq7mAENYW3Hfm43X00PYIJIBc/thumbnail.jpg',     video: 'https://stream.mux.com/pUdnGN7FuEbMrK9nRTchq7mAENYW3Hfm43X00PYIJIBc.m3u8' },
   { title: 'AINKER SS25',                    cat: 'fashion',    thumb: 'https://image.mux.com/zeCaPzfn1OBsO6SkjnuUf8QDuMnTC02kFc02kXam3jV9E/thumbnail.jpg', video: 'https://stream.mux.com/zeCaPzfn1OBsO6SkjnuUf8QDuMnTC02kFc02kXam3jV9E.m3u8' },
   { title: 'Matériau éternel — Motty Perry', cat: 'films',    thumb: 'https://image.mux.com/iycea00j0202SuL81oUVe5nn01uVrgTwn1jr1rjlAXwMOdY/thumbnail.jpg', video: 'https://stream.mux.com/iycea00j0202SuL81oUVe5nn01uVrgTwn1jr1rjlAXwMOdY.m3u8' },
   { title: 'JHON LAUNDRY',                   cat: 'fashion',    thumb: 'https://image.mux.com/D4xdOobmlNEHa6gxSxWSiQOSADw3yKMADtzVmnZ2opg/thumbnail.jpg', video: 'https://stream.mux.com/D4xdOobmlNEHa6gxSxWSiQOSADw3yKMADtzVmnZ2opg.m3u8' },
@@ -35,6 +35,7 @@ const PROJECTS = [
   { title: 'TATAN - DREAM NO.5',                     cat: 'music',      thumb: 'https://image.mux.com/18WdRm5hLbfomtalIbJwDwaxucoJrIriqtqHZuMdE2E/thumbnail.jpg', video: 'https://stream.mux.com/18WdRm5hLbfomtalIbJwDwaxucoJrIriqtqHZuMdE2E.m3u8' },
   { title: 'MASH — Fashion Editorial III',   cat: 'fashion',    thumb: 'https://image.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE/thumbnail.jpg',   video: 'https://stream.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE.m3u8' },
   { title: 'ULIKE — Commercial',             cat: 'commercial', thumb: 'https://image.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500/thumbnail.jpg?time=0.5',  video: 'https://stream.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500.m3u8' },
+  { title: 'CORUJA BLU — JOJO (LIVE)',       cat: 'music',      thumb: 'https://image.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI/thumbnail.jpg',                video: 'https://stream.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI.m3u8' },
 ];
 
 const FILTERS = [
@@ -162,7 +163,7 @@ export default function FullscreenPortfolio() {
       if (!v) return;
       const src = `https://stream.mux.com/${muxId}.m3u8`;
       if (Hls.isSupported()) {
-        const hls = new Hls({ startLevel: 0, maxBufferLength: 30 });
+        const hls = new Hls({ startLevel: -1, maxBufferLength: 30 });
         hlsRefs.current[i] = hls;
         hls.loadSource(src);
         hls.attachMedia(v);
@@ -240,7 +241,7 @@ export default function FullscreenPortfolio() {
             grid-template-columns: 1fr 1fr;
             gap: 14px 10px;
           }
-          .fpm__card { cursor: pointer; }
+          .fpm__card { cursor: none; }
           .fpm__thumb {
             width: 100%; aspect-ratio: 16/10;
             overflow: hidden; border-radius: 4px; background: #111;
@@ -266,7 +267,7 @@ export default function FullscreenPortfolio() {
         {PROJECTS.map((p, i) => (
           <div
             key={i}
-            className={`fp__bg-layer${i === activeIndex ? ' active' : ''}`}
+            className={`fp__bg-layer${(activeView === 'about' ? 0 : activeIndex) === i ? ' active' : ''}`}
             style={loadedIndexes.has(i) ? { backgroundImage: `url(${p.thumb})` } : undefined}
           />
         ))}
@@ -277,15 +278,15 @@ export default function FullscreenPortfolio() {
             muted
             loop
             playsInline
-            className={`fp__bg-video${i === activeIndex ? ' fp__bg-video--active' : ''}`}
+            className={`fp__bg-video${(activeView === 'about' ? 0 : activeIndex) === i ? ' fp__bg-video--active' : ''}`}
           />
         ) : null)}
       </div>
       <div className="fp__vignette" />
+      <div className={`fp__about-bg${activeView === 'about' ? ' fp__about-bg--visible' : ''}`} />
 
       <header className="fp__header">
         <div className="fp__brand">FERAL</div>
-        <div className="fp__eyebrow">Selected Work</div>
       </header>
 
       <nav className="fp__filters">
@@ -306,6 +307,7 @@ export default function FullscreenPortfolio() {
         </button>
       </nav>
 
+      <div className="fp__content-wrap">
       <ul className={`fp__list${activeView === 'about' ? ' fp__list--hidden' : ''}`}>
         {PROJECTS.map((p, i) => (
           <li key={i} className={`fp__item${i === activeIndex ? ' active' : ''}${isVisible(p) ? '' : ' fp__item--hidden'}`}>
@@ -324,6 +326,7 @@ export default function FullscreenPortfolio() {
       <div className={`fp__about${activeView === 'about' ? ' fp__about--visible' : ''}`}>
         <div className="fp__about-photos">
           <img src="https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/Screenshot%202026-04-20%20at%2021.28.11.png" alt="Eden Bachar" />
+          <div className="fp__about-divider" />
           <img src="https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/Screenshot%202026-04-20%20at%2021.28.27.png" alt="Yuval Aloni" />
         </div>
         <div className="fp__about-body">
@@ -336,6 +339,7 @@ export default function FullscreenPortfolio() {
             <a href="https://www.instagram.com/yuvala96/" target="_blank" rel="noopener noreferrer">@yuvala96</a>
           </div>
         </div>
+      </div>
       </div>
 
       {lightboxProject && (
@@ -365,6 +369,13 @@ export default function FullscreenPortfolio() {
         }
         .fp__bg-video--active { opacity: 1; }
         .fp__vignette { display: none; }
+        .fp__about-bg {
+          position: sticky; top: 0; height: 100vh; margin-bottom: -100vh;
+          z-index: 1; pointer-events: none;
+          background: rgba(0,0,0,0.75);
+          opacity: 0; transition: opacity 0.4s ease;
+        }
+        .fp__about-bg--visible { opacity: 1; }
         .fp__header {
           position: sticky; top: 0; z-index: 10;
           display: flex; justify-content: space-between; align-items: baseline;
@@ -379,8 +390,13 @@ export default function FullscreenPortfolio() {
           letter-spacing: 0.2em; text-transform: uppercase;
           color: rgba(255,255,255,0.4);
         }
+        .fp__content-wrap {
+          position: relative;
+          min-height: 100vh;
+        }
         .fp__list {
           list-style: none; padding: 24px 0 300px; position: relative; z-index: 3;
+          opacity: 1; transition: opacity 0.4s ease; pointer-events: auto;
         }
         .fp__item {
           display: grid;
@@ -400,11 +416,11 @@ export default function FullscreenPortfolio() {
           display: block; width: 100%;
           padding: 18px 6vw;
           font-family: inherit;
-          font-size: clamp(18px, 3vw, 46px);
+          font-size: clamp(14px, 2.4vw, 37px);
           font-weight: 400; letter-spacing: 0.03em;
           text-transform: uppercase; text-align: left;
           color: rgba(255,255,255,0.2);
-          cursor: none;
+          cursor: none; user-select: none; -webkit-user-select: none;
           transition: color 0.2s ease, padding-left 0.2s ease, opacity 0.35s ease;
           line-height: 1.1;
           opacity: 1;
@@ -420,7 +436,7 @@ export default function FullscreenPortfolio() {
         .fp__filters {
           position: fixed;
           top: 30vh;
-          right: 12vw;
+          right: calc(12vw + 20px);
           z-index: 10;
           display: flex;
           flex-direction: column;
@@ -430,31 +446,40 @@ export default function FullscreenPortfolio() {
         .fp__filter-btn {
           background: none; border: none; outline: none;
           font-family: inherit;
-          font-size: 11px; font-weight: 600;
+          font-size: 12px; font-weight: 600;
           letter-spacing: 0.18em; text-transform: uppercase;
           color: rgba(255,255,255,0.28);
-          cursor: none;
+          cursor: none; user-select: none; -webkit-user-select: none;
           padding: 0;
           transition: color 0.2s ease;
         }
         .fp__filter-btn:hover { color: rgba(255,255,255,0.7); }
         .fp__filter-btn.active { color: #fff; }
         .fp__filter-about { margin-top: 24px; }
-        .fp__list--hidden { display: none; }
+        .fp__list--hidden { opacity: 0; pointer-events: none; }
         .fp__about {
-          display: none;
           padding: 24px 6vw 300px;
-          position: relative; z-index: 3;
+          position: absolute; top: 0; left: 0; width: 100%; z-index: 3;
           max-width: 676px;
+          opacity: 0; pointer-events: none;
+          transition: opacity 0.4s ease;
         }
-        .fp__about--visible { display: block; }
+        .fp__about--visible { opacity: 1; pointer-events: auto; }
         .fp__about-photos {
-          display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-          margin-bottom: 36px;
+          display: grid; grid-template-columns: 1fr 30px 1fr;
+          margin-top: 30px; margin-bottom: 36px;
         }
         .fp__about-photos img {
           width: 100%; aspect-ratio: 3/4; object-fit: cover;
-          filter: grayscale(100%);
+          filter: grayscale(100%); border-radius: 8px;
+        }
+        .fp__about-divider {
+          display: flex; align-items: stretch; justify-content: center;
+        }
+        .fp__about-divider::after {
+          content: ''; display: block;
+          width: 1px; height: 100%;
+          background: rgba(255,255,255,0.2);
         }
         .fp__about-bio {
           font-size: 18px; line-height: 1.75;
