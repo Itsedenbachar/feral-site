@@ -164,12 +164,6 @@ export default function FullscreenPortfolio() {
       const src = `https://stream.mux.com/${muxId}.m3u8`;
       if (v.canPlayType('application/vnd.apple.mpegurl')) {
         v.src = src;
-        v.load();
-        const onReady = () => {
-          v.play().catch(() => {});
-          v.removeEventListener('loadedmetadata', onReady);
-        };
-        v.addEventListener('loadedmetadata', onReady);
       } else if (Hls.isSupported()) {
         const hls = new Hls({ startLevel: 0, maxBufferLength: 30 });
         hlsRefs.current[i] = hls;
