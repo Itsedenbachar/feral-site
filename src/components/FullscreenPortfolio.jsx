@@ -279,10 +279,11 @@ export default function FullscreenPortfolio() {
         {PROJECTS.map((p, i) => getMuxId(p.video) ? (
           <video
             key={`v-${i}`}
-            ref={el => { videoRefs.current[i] = el; }}
+            ref={el => { videoRefs.current[i] = el; if (el) el.muted = true; }}
             muted
             loop
             playsInline
+            autoPlay
             className={`fp__bg-video${(activeView === 'about' ? 0 : activeIndex) === i ? ' fp__bg-video--active' : ''}`}
           />
         ) : null)}
