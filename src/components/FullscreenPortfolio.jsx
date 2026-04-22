@@ -162,13 +162,7 @@ export default function FullscreenPortfolio() {
       const v = videoRefs.current[i];
       if (!v) return;
       const src = `https://stream.mux.com/${muxId}.m3u8`;
-      if (Hls.isSupported()) {
-        const hls = new Hls({ startLevel: -1, maxBufferLength: 30 });
-        hlsRefs.current[i] = hls;
-        hls.loadSource(src);
-        hls.attachMedia(v);
-        hls.on(Hls.Events.MANIFEST_PARSED, () => { v.play().catch(() => {}); });
-      } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
+      if (v.canPlayType('application/vnd.apple.mpegurl')) {
         v.src = src;
         v.load();
         const onReady = () => {
@@ -176,6 +170,12 @@ export default function FullscreenPortfolio() {
           v.removeEventListener('loadedmetadata', onReady);
         };
         v.addEventListener('loadedmetadata', onReady);
+      } else if (Hls.isSupported()) {
+        const hls = new Hls({ startLevel: 0, maxBufferLength: 30 });
+        hlsRefs.current[i] = hls;
+        hls.loadSource(src);
+        hls.attachMedia(v);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => { v.play().catch(() => {}); });
       }
     });
     return () => { hlsRefs.current.forEach(h => h?.destroy()); hlsRefs.current = []; };
