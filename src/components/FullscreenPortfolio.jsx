@@ -170,7 +170,12 @@ export default function FullscreenPortfolio() {
         hls.on(Hls.Events.MANIFEST_PARSED, () => { v.play().catch(() => {}); });
       } else if (v.canPlayType('application/vnd.apple.mpegurl')) {
         v.src = src;
-        v.play().catch(() => {});
+        v.load();
+        const onReady = () => {
+          v.play().catch(() => {});
+          v.removeEventListener('loadedmetadata', onReady);
+        };
+        v.addEventListener('loadedmetadata', onReady);
       }
     });
     return () => { hlsRefs.current.forEach(h => h?.destroy()); hlsRefs.current = []; };
@@ -291,20 +296,24 @@ export default function FullscreenPortfolio() {
 
       <nav className="fp__filters">
         {FILTERS.map(f => (
-          <button
+          <div
             key={f.id}
+            role="button"
+            tabIndex={-1}
             className={`fp__filter-btn${activeView !== 'about' && activeCategory === f.id ? ' active' : ''}`}
             onClick={() => handleCategoryChange(f.id)}
           >
             {f.label}
-          </button>
+          </div>
         ))}
-        <button
+        <div
+          role="button"
+          tabIndex={-1}
           className={`fp__filter-btn fp__filter-about${activeView === 'about' ? ' active' : ''}`}
           onClick={() => setActiveView(activeView === 'about' ? 'projects' : 'about')}
         >
           About
-        </button>
+        </div>
       </nav>
 
       <div className="fp__content-wrap">
