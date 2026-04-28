@@ -92,7 +92,10 @@ export default function VideoPlayer({ src, poster }) {
   const handleProgressMouseLeave = () => setScrub(s => ({ ...s, visible: false }));
 
   const selectLevel = (index) => {
-    if (hlsRef.current) hlsRef.current.currentLevel = index;
+    if (hlsRef.current) {
+      hlsRef.current.nextLevel = index;
+      hlsRef.current.loadLevel = index;
+    }
     setCurrentLevel(index);
     setShowQuality(false);
   };
