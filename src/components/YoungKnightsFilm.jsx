@@ -1,3 +1,4 @@
+import CustomCursor from './CustomCursor';
 import VideoPlayer from './VideoPlayer';
 
 const PLAYBACK_ID = 'E0002I02xaSn6gCcE22jXpDK02lbkiX2VXOOoFfePtLwpFc';
@@ -8,6 +9,7 @@ export default function YoungKnightsFilm() {
 
   return (
     <div className="ykf-page">
+      <CustomCursor />
       <div className="ykf-stage">
         <VideoPlayer src={src} poster={poster} />
       </div>
