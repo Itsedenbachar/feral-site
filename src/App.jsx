@@ -2,6 +2,7 @@ import { useState } from 'react';
 import CustomCursor from './components/CustomCursor';
 import FeralReveal from './components/FeralReveal';
 import FullscreenPortfolio from './components/FullscreenPortfolio';
+import YoungKnightsFilm from './components/YoungKnightsFilm';
 import './index.css';
 
 function Impressum() {
@@ -56,6 +57,10 @@ function Impressum() {
 
 export default function App() {
   const [loaded, setLoaded] = useState(false);
+
+  if (typeof window !== 'undefined' && window.location.pathname.replace(/\/$/, '') === '/youngknightsfilm') {
+    return <YoungKnightsFilm />;
+  }
 
   return (
     <>

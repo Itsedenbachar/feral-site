@@ -64,7 +64,7 @@ export default function CustomCursor() {
       if (ringRef.current) ringRef.current.style.opacity = '0';
     };
 
-    const CURSOR_TARGETS = '.fp__filter-btn, .fp__item button';
+    const CURSOR_TARGETS = '.fp__filter-btn, .fp__item button, .fp__item div[role="button"]';
     const onContextMenu = (e) => {
       if (e.target.closest && e.target.closest(CURSOR_TARGETS)) e.preventDefault();
     };
