@@ -1,4 +1,3 @@
-import CustomCursor from './CustomCursor';
 import VideoPlayer from './VideoPlayer';
 
 const PLAYBACK_ID = 'E0002I02xaSn6gCcE22jXpDK02lbkiX2VXOOoFfePtLwpFc';
@@ -9,12 +8,18 @@ export default function YoungKnightsFilm() {
 
   return (
     <div className="ykf-page">
-      <CustomCursor />
       <div className="ykf-stage">
         <VideoPlayer src={src} poster={poster} />
       </div>
       <style>{`
         html, body, #root { background: #000; }
+        html, body, #root, .ykf-page, .ykf-page * { cursor: auto !important; }
+        .ykf-page .vl-progress,
+        .ykf-page .vl-progress *,
+        .ykf-page .vl-ctrl-btn,
+        .ykf-page .vl-play-label,
+        .ykf-page button,
+        .ykf-page a { cursor: pointer !important; }
         .ykf-page {
           min-height: 100vh;
           background: #000;
