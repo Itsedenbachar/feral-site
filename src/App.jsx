@@ -58,7 +58,7 @@ function Impressum() {
 export default function App() {
   const [loaded, setLoaded] = useState(false);
 
-  if (typeof window !== 'undefined' && window.location.pathname.replace(/\/$/, '') === '/youngknightsfilm') {
+  if (typeof window !== 'undefined' && window.location.pathname.replace(/\/$/, '') === '/youngnightsfilm') {
     return <YoungKnightsFilm />;
   }
 
