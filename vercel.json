@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/youngnightsfilm", "destination": "/youngnightsfilm.html" }
+    { "source": "/youngnightsfilm", "destination": "/youngnightsfilm.html" },
+    { "source": "/:slug([a-z0-9-]+)", "destination": "/index.html" }
   ],
   "headers": [
     {

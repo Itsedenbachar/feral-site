@@ -15,6 +15,25 @@ function getMuxId(url) {
   return m ? m[1] : null;
 }
 
+function slugify(t) {
+  return (t || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function compactSlug(s) {
+  return (s || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function findProjectByPath(pathname, projects) {
+  const raw = (pathname || '').replace(/^\/+|\/+$/g, '');
+  if (!raw) return null;
+  const target = compactSlug(raw);
+  if (!target) return null;
+  return projects.find(p => compactSlug(p.title) === target) || null;
+}
+
 const PROJECTS = [
   { title: 'SHOWREEL',                       cat: null,         thumb: 'https://image.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk/thumbnail.jpg', video: 'https://stream.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk.m3u8' },
   { title: 'YOUNG NIGHTS — Short Film',       cat: 'films',      thumb: 'https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.1.jpg', video: null, photos: ['https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.1.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.2.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.3.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.4.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.5.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.6.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.7.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.8.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131341_1.1.9.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131718_1.1.7.jpg','https://pub-3eb95e23168a47b5b5959d5248287c88.r2.dev/feral_youngnights_photos/Still%202025-05-27%20131718_1.1.9.jpg'] },
@@ -145,6 +164,43 @@ export default function FullscreenPortfolio() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  const openProject = (p) => {
+    if (p.photos?.length) setGalleryProject(p);
+    else setLightboxProject(p);
+    const slug = slugify(p.title);
+    if (slug && window.location.pathname !== '/' + slug) {
+      window.history.pushState({ projectSlug: slug }, '', '/' + slug);
+    }
+  };
+
+  const closeProject = () => {
+    setLightboxProject(null);
+    setGalleryProject(null);
+    if (window.location.pathname !== '/') {
+      window.history.pushState({}, '', '/');
+    }
+  };
+
+  useEffect(() => {
+    const matched = findProjectByPath(window.location.pathname, PROJECTS);
+    if (matched) {
+      if (matched.photos?.length) setGalleryProject(matched);
+      else setLightboxProject(matched);
+    }
+    const onPop = () => {
+      const m = findProjectByPath(window.location.pathname, PROJECTS);
+      if (m) {
+        if (m.photos?.length) { setGalleryProject(m); setLightboxProject(null); }
+        else { setLightboxProject(m); setGalleryProject(null); }
+      } else {
+        setLightboxProject(null);
+        setGalleryProject(null);
+      }
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
   useEffect(() => {
     setLoadedIndexes(prev => {
       if (prev.has(activeIndex)) return prev;
@@ -200,7 +256,7 @@ export default function FullscreenPortfolio() {
             <div
               key={i}
               className="fpm__card"
-              onClick={() => p.photos?.length ? setGalleryProject(p) : setLightboxProject(p)}
+              onClick={() => openProject(p)}
             >
               <div className="fpm__thumb">
                 <img
@@ -215,10 +271,10 @@ export default function FullscreenPortfolio() {
           ))}
         </div>
         {lightboxProject && (
-          <Lightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
+          <Lightbox project={lightboxProject} onClose={closeProject} />
         )}
         {galleryProject && (
-          <PhotoGallery title={galleryProject.title} photos={galleryProject.photos} onClose={() => setGalleryProject(null)} />
+          <PhotoGallery title={galleryProject.title} photos={galleryProject.photos} onClose={closeProject} />
         )}
         <style>{`
           .fpm { background: #000; padding: 24px 14px 40px; }
@@ -318,7 +374,7 @@ export default function FullscreenPortfolio() {
             <div className="fp__item-inner">
               <button
                 onMouseEnter={() => isVisible(p) && setActiveIndex(i)}
-                onClick={() => p.photos?.length ? setGalleryProject(p) : setLightboxProject(p)}
+                onClick={() => openProject(p)}
               >
                 {p.title}
               </button>
@@ -347,10 +403,10 @@ export default function FullscreenPortfolio() {
       </div>
 
       {lightboxProject && (
-        <Lightbox project={lightboxProject} onClose={() => setLightboxProject(null)} />
+        <Lightbox project={lightboxProject} onClose={closeProject} />
       )}
       {galleryProject && (
-        <PhotoGallery title={galleryProject.title} photos={galleryProject.photos} onClose={() => setGalleryProject(null)} />
+        <PhotoGallery title={galleryProject.title} photos={galleryProject.photos} onClose={closeProject} />
       )}
 
       <style>{`
