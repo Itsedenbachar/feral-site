@@ -36,7 +36,9 @@ function findProjectByPath(pathname, projects) {
 
 const PROJECTS = [
   { title: 'SHOWREEL',                       cat: null,         thumb: 'https://image.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk/thumbnail.jpg', video: 'https://stream.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk.m3u8' },
-  { title: 'YOUNG NIGHTS — Short Film',       cat: 'films',      thumb: 'https://image.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4/thumbnail.jpg', video: 'https://stream.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4.m3u8' },
+  { title: 'YOUNG NIGHTS — Short Film',       cat: 'films',      thumb: 'https://image.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4/thumbnail.jpg', video: 'https://stream.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4.m3u8', bts: ['/young-nights-bts/bts-01.jpg', '/young-nights-bts/bts-02.jpg', '/young-nights-bts/bts-03.jpg', '/young-nights-bts/bts-04.jpg', '/young-nights-bts/bts-05.jpg'] },
+  { title: 'GIANT ROOKS - The Big Night Out', cat: 'music',      thumb: 'https://image.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I/thumbnail.jpg', video: 'https://stream.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I.m3u8' },
+  { title: 'Temmis - Für immer drauf',        cat: 'music',      thumb: 'https://image.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk/thumbnail.jpg', video: 'https://stream.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk.m3u8' },
   { title: 'ZVEZDA — Short Film',            cat: 'films',      thumb: 'https://image.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ/thumbnail.jpg?time=73',   video: 'https://stream.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ.m3u8' },
   { title: 'AINKER SS26',                    cat: 'fashion',    thumb: 'https://image.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ/thumbnail.jpg',   video: 'https://stream.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ.m3u8' },
   { title: 'ALEXANDER MALOFEEV — Prelude',   cat: 'music',      thumb: 'https://image.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE/thumbnail.jpg?time=4',   video: 'https://stream.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE.m3u8' },
@@ -97,27 +99,40 @@ function Lightbox({ project, onClose }) {
 
   return createPortal(
     <div className={`fp-lb${closing ? ' fp-lb--closing' : ''}`} onClick={handleClose}>
-      <div className="fp-lb__inner" onClick={e => e.stopPropagation()}>
+      <div className={`fp-lb__inner${project.bts?.length ? ' fp-lb__inner--with-bts' : ''}`} onClick={e => e.stopPropagation()}>
         <button className="fp-lb__close" onClick={handleClose}>✕</button>
-        {isHlsUrl(project.video) ? (
-          <Suspense fallback={<div className="fp-lb__iframe" style={{ background: '#000' }} />}>
-            <VideoPlayer src={project.video} poster={project.thumb} />
-          </Suspense>
-        ) : (
-          <iframe
-            src={getLightboxUrl(project.video)}
-            className="fp-lb__iframe"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-            title={project.title}
-          />
-        )}
+        <div className="fp-lb__video-stage">
+          {isHlsUrl(project.video) ? (
+            <Suspense fallback={<div className="fp-lb__iframe" style={{ background: '#000' }} />}>
+              <VideoPlayer src={project.video} poster={project.thumb} />
+            </Suspense>
+          ) : (
+            <iframe
+              src={getLightboxUrl(project.video)}
+              className="fp-lb__iframe"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+              title={project.title}
+            />
+          )}
+        </div>
+        {project.bts?.length ? (
+          <section className="fp-lb__bts" aria-label={`${project.title} behind the scenes`}>
+            <p className="fp-lb__bts-label">Behind the scenes</p>
+            <div className="fp-lb__bts-grid">
+              {project.bts.map((src, index) => (
+                <img key={src} src={src} alt={`${project.title} behind the scenes ${index + 1}`} loading="lazy" />
+              ))}
+            </div>
+          </section>
+        ) : null}
       </div>
       <style>{`
         .fp-lb {
           position: fixed; inset: 0;
           background: rgba(0,0,0,0.92); z-index: 9000;
           display: flex; align-items: center; justify-content: center;
+          overflow-y: auto; padding: 5vh 5vw;
           animation: fpLbFade 0.25s ease;
         }
         @keyframes fpLbFade { from { opacity: 0; } to { opacity: 1; } }
@@ -129,8 +144,14 @@ function Lightbox({ project, onClose }) {
           border-radius: 8px; overflow: hidden;
           animation: fpLbScale 0.3s cubic-bezier(0.34,1.56,0.64,1);
         }
+        .fp-lb__inner--with-bts { aspect-ratio: auto; align-self: flex-start; margin: auto 0; }
+        .fp-lb__video-stage { width: 100%; aspect-ratio: 16/9; background: #000; }
         @keyframes fpLbScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .fp-lb__iframe { width: 100%; height: 100%; border: none; }
+        .fp-lb__bts { padding: 56px 0 0; background: #000; }
+        .fp-lb__bts-label { margin: 0 0 16px; padding: 0 2px; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+        .fp-lb__bts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .fp-lb__bts-grid img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #111; }
         .fp-lb__close {
           position: absolute; top: 12px; right: 12px;
           background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.15);
@@ -139,6 +160,12 @@ function Lightbox({ project, onClose }) {
           z-index: 10; cursor: none; transition: background 0.2s;
         }
         .fp-lb__close:hover { background: rgba(255,255,255,0.15); }
+        @media (max-width: 640px) {
+          .fp-lb { align-items: flex-start; padding: 16px; }
+          .fp-lb__inner { width: 100%; }
+          .fp-lb__bts { padding-top: 36px; }
+          .fp-lb__bts-grid { grid-template-columns: 1fr; gap: 10px; }
+        }
       `}</style>
     </div>,
     document.body
