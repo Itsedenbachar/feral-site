@@ -61,10 +61,10 @@ const PROJECTS = [
 
 const FILTERS = [
   { id: 'all',        label: 'All works'   },
+  { id: 'films',      label: 'Short films' },
   { id: 'music',      label: 'Music'       },
   { id: 'fashion',    label: 'Fashion'     },
   { id: 'commercial', label: 'Commercial'  },
-  { id: 'films',      label: 'Short films' },
 ];
 
 function getLightboxUrl(url) {
