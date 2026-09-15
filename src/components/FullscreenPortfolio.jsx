@@ -130,7 +130,7 @@ function Lightbox({ project, onClose }) {
       <style>{`
         .fp-lb {
           position: fixed; inset: 0;
-          background: rgba(0,0,0,0.92); z-index: 9000;
+          background: transparent; z-index: 9000;
           display: flex; align-items: center; justify-content: center;
           overflow-y: auto; padding: 5vh 5vw;
           animation: fpLbFade 0.25s ease;
@@ -145,10 +145,10 @@ function Lightbox({ project, onClose }) {
           animation: fpLbScale 0.3s cubic-bezier(0.34,1.56,0.64,1);
         }
         .fp-lb__inner--with-bts { aspect-ratio: auto; align-self: flex-start; margin: auto 0; }
-        .fp-lb__video-stage { width: 100%; aspect-ratio: 16/9; background: #000; }
+        .fp-lb__video-stage { width: 100%; aspect-ratio: 16/9; background: transparent; }
         @keyframes fpLbScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .fp-lb__iframe { width: 100%; height: 100%; border: none; }
-        .fp-lb__bts { padding: 56px 0 0; background: #000; }
+        .fp-lb__bts { padding: 56px 0 0; background: transparent; }
         .fp-lb__bts-label { margin: 0 0 16px; padding: 0 2px; color: rgba(255,255,255,0.6); font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
         .fp-lb__bts-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
         .fp-lb__bts-grid img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: #111; }
