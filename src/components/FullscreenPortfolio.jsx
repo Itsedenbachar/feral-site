@@ -58,6 +58,7 @@ const PROJECTS = [
   { title: 'MASH - Fashion Editorial III',   cat: 'fashion',    thumb: 'https://image.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE/thumbnail.jpg',   video: 'https://stream.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE.m3u8' },
   { title: 'ULIKE - Commercial',             cat: 'commercial', thumb: 'https://image.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500/thumbnail.jpg?time=0.5',  video: 'https://stream.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500.m3u8' },
   { title: 'CORUJA BLU - JOJO (LIVE)',       cat: 'music',      thumb: 'https://image.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI/thumbnail.jpg',                video: 'https://stream.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI.m3u8' },
+  { title: 'PETAL - JEWELERY',               cat: 'commercial', thumb: 'https://image.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00/thumbnail.jpg',              video: 'https://stream.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00.m3u8' },
 ];
 
 const FILTERS = [
