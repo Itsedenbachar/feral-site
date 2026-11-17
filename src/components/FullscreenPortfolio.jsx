@@ -37,9 +37,10 @@ function findProjectByPath(pathname, projects) {
 const PROJECTS = [
   { title: 'SHOWREEL',                       cat: null,         thumb: 'https://image.mux.com/Dgz8hSprADtUgsa100rv01hRx01ypn1KULGrvXaf3xRNOI/thumbnail.jpg', video: 'https://stream.mux.com/Dgz8hSprADtUgsa100rv01hRx01ypn1KULGrvXaf3xRNOI.m3u8' },
   { title: 'YOUNG NIGHTS - Short Film',       cat: 'films',      thumb: 'https://image.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4/thumbnail.jpg', video: 'https://stream.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4.m3u8', bts: ['/young-nights-bts/bts-01.jpg', '/young-nights-bts/bts-02.jpg', '/young-nights-bts/bts-03.jpg', '/young-nights-bts/bts-04.jpg', '/young-nights-bts/bts-05.jpg'] },
+  { title: 'PETAL - JEWELRY',         cat: 'commercial', thumb: 'https://image.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00/thumbnail.jpg',              video: 'https://stream.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00.m3u8' },
+  { title: 'Merde Magazine - Body Double',     cat: 'fashion',    thumb: 'https://image.mux.com/JStv7GMkWLj00U7eQv4yZM53NRa3XAi8c100iMbPWea7Q/thumbnail.jpg', video: 'https://stream.mux.com/JStv7GMkWLj00U7eQv4yZM53NRa3XAi8c100iMbPWea7Q.m3u8' },
   { title: 'GIANT ROOKS - The Big Night Out', cat: 'music',      thumb: 'https://image.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I/thumbnail.jpg', video: 'https://stream.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I.m3u8' },
   { title: 'Temmis - Für immer drauf',        cat: 'music',      thumb: 'https://image.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk/thumbnail.jpg', video: 'https://stream.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk.m3u8' },
-  { title: 'Merde Magazine - Body Double',     cat: 'fashion',    thumb: 'https://image.mux.com/JStv7GMkWLj00U7eQv4yZM53NRa3XAi8c100iMbPWea7Q/thumbnail.jpg', video: 'https://stream.mux.com/JStv7GMkWLj00U7eQv4yZM53NRa3XAi8c100iMbPWea7Q.m3u8' },
   { title: 'ZVEZDA - Short Film',            cat: 'films',      thumb: 'https://image.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ/thumbnail.jpg?time=73',   video: 'https://stream.mux.com/9GI01WGLJgu02hz8MzCqVjhPN0035wvtSjlmASpyzMnsuQ.m3u8' },
   { title: 'AINKER SS26',                    cat: 'fashion',    thumb: 'https://image.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ/thumbnail.jpg',   video: 'https://stream.mux.com/FvFuLIldOQQTvBOzILCqRmDzzysAO65ehVNwyCIPJUQ.m3u8' },
   { title: 'ALEXANDER MALOFEEV - Prelude',   cat: 'music',      thumb: 'https://image.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE/thumbnail.jpg?time=4',   video: 'https://stream.mux.com/W1oiTDuCS58FBqqIinq23SQw39zKuhJpjN6qM101LILE.m3u8' },
@@ -58,7 +59,6 @@ const PROJECTS = [
   { title: 'MASH - Fashion Editorial III',   cat: 'fashion',    thumb: 'https://image.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE/thumbnail.jpg',   video: 'https://stream.mux.com/xumuVwL1m300pIai1zFWlHSd201FcWXC4cCKfHSfyKtdE.m3u8' },
   { title: 'ULIKE - Commercial',             cat: 'commercial', thumb: 'https://image.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500/thumbnail.jpg?time=0.5',  video: 'https://stream.mux.com/OtHvCKoRnQNYv00OrdpEtr7JECg9EckNhD8tfwgQmp500.m3u8' },
   { title: 'CORUJA BLU - JOJO (LIVE)',       cat: 'music',      thumb: 'https://image.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI/thumbnail.jpg',                video: 'https://stream.mux.com/02h02CB22MZG2quotQiEdKFD9moawwn3jcYjMRI1hWDCI.m3u8' },
-  { title: 'PETAL - JEWELRY',         cat: 'commercial', thumb: 'https://image.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00/thumbnail.jpg',              video: 'https://stream.mux.com/E3ytu7rQZxHSmaIW01Q02XFG4JoEsg7udrJ8MjRtHpKY00.m3u8' },
 ];
 
 const FILTERS = [
