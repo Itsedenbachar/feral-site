@@ -35,7 +35,7 @@ function findProjectByPath(pathname, projects) {
 }
 
 const PROJECTS = [
-  { title: 'SHOWREEL',                       cat: null,         thumb: 'https://image.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk/thumbnail.jpg', video: 'https://stream.mux.com/dwYuh02o02BOdqg3ABHkl9cH2E5IoIPd00U01GY01Vq0201qRk.m3u8' },
+  { title: 'SHOWREEL',                       cat: null,         thumb: 'https://image.mux.com/Dgz8hSprADtUgsa100rv01hRx01ypn1KULGrvXaf3xRNOI/thumbnail.jpg', video: 'https://stream.mux.com/Dgz8hSprADtUgsa100rv01hRx01ypn1KULGrvXaf3xRNOI.m3u8' },
   { title: 'YOUNG NIGHTS - Short Film',       cat: 'films',      thumb: 'https://image.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4/thumbnail.jpg', video: 'https://stream.mux.com/d6QxYezMLM018OZkZsiQn5OiDg3MwvLX5HaUJRn01lYV4.m3u8', bts: ['/young-nights-bts/bts-01.jpg', '/young-nights-bts/bts-02.jpg', '/young-nights-bts/bts-03.jpg', '/young-nights-bts/bts-04.jpg', '/young-nights-bts/bts-05.jpg'] },
   { title: 'GIANT ROOKS - The Big Night Out', cat: 'music',      thumb: 'https://image.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I/thumbnail.jpg', video: 'https://stream.mux.com/F2MVqekhXjh7l2LYnyeqKFejyZZj02yV6cLT00sw5G017I.m3u8' },
   { title: 'Temmis - Für immer drauf',        cat: 'music',      thumb: 'https://image.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk/thumbnail.jpg', video: 'https://stream.mux.com/BgjyNHS4SE5ESiYRa8g301TdK5Jw3O1iLy5Nv2EW32Gk.m3u8' },
